@@ -14,12 +14,10 @@ datasource db {
 }
 
 model User {
-  id             Int     @id @default(autoincrement())
-  email          String  @unique
-  password       String
-  isActivated    Boolean @default(false)
-  activationLink String  @unique
-  token          Token?
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  token    Token?
 }
 
 model Token {

@@ -65,7 +65,6 @@ class UserController {
       return res.status(400).json({ error: err.message });
     }
   }
-  async activate(req: Request, res: Response) {}
 }
 
 export const userController = new UserController();

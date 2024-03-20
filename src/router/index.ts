@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { userController } from "../controllers/userController";
 import { body } from "express-validator";
-// import authMiddleware from "../middlewares/authMiddleware";
+import authMiddleware from "../middlewares/authMiddleware";
 
 export const router = Router();
 
@@ -13,9 +13,8 @@ router.post(
   userController.registration
 );
 router.post("/logout", userController.logout);
-router.get("/activate/:link", userController.activate);
 router.get("/refresh", userController.refresh);
 
 // test
-router.get("/users", userController.getAllUsers);
-router.delete("/user", userController.deleteUser);
+router.get("/users", authMiddleware, userController.getAllUsers);
+router.delete("/user", authMiddleware, userController.deleteUser);

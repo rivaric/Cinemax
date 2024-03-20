@@ -1,6 +1,4 @@
 import bcrypt from "bcrypt";
-import { v4 } from "uuid";
-// import { mailService } from "./mailService";
 import { PrismaClient } from "@prisma/client";
 import { tokenService } from "./tokenService";
 import { UserDto } from "../dtos/userDto";
@@ -37,15 +35,12 @@ class UserService {
       );
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const activationLink = v4();
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        activationLink,
       },
     });
-    // await mailService.sendActivationMail(email, activationLink);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateToken({ ...userDto });
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -60,22 +55,6 @@ class UserService {
     const token = await tokenService.removeToken(refreshToken);
     return token;
   }
-
-  // async activate(activationLink: string) {
-  //   const user = await prisma.user.findUnique({
-  //     where: { activationLink },
-  //   });
-  //   if (!user) {
-  //     throw new Error(
-  //       `Пользователь с почтовым адресом ${activationLink} не существует`
-  //     );
-  //   }
-  //   const newUserInfo = await prisma.user.update({
-  //     where: { activationLink },
-  //     data: { isActivated: true },
-  //   });
-  //   return newUserInfo;
-  // }
 
   async getAllUsers() {
     const users = await prisma.user.findMany();
