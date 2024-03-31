@@ -15,6 +15,8 @@ tags:
     description: API для авторизации и аутентификации пользователей
   - name: Users
     description: API для работы с пользователями
+  - name: Movies
+    description: API для работы с фильмами
 paths:
   /api/login:
     post:
@@ -122,3 +124,11 @@ paths:
       responses:
         "200":
           description: Пользователь успешно удален
+  /api/movies:
+    get:
+      summary: Получить список фильмов
+      tags:
+        - Movies
+      security:
+        - bearerAuth: []
+      responses:
