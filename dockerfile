@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 7000
 
-CMD yarn run dev
+CMD ["bash", "-c", "npx prisma migrate dev && yarn run dev"]
