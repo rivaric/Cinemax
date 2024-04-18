@@ -18,18 +18,20 @@ class MovieService {
   }
 
   async createMovie(dataMovie: Movie, files: FileArray) {
-    const fileName = fileServices.uploadFile(files);
+    const fileNamePicker = fileServices.uploadFilePicker(files);
+    const fileNameVideo = fileServices.uploadFileVideo(files);
     const movie = await prisma.movie.create({
-      data: { ...dataMovie, img: fileName! },
+      data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
     });
     return movie;
   }
 
   async updateMovie(id: number, dataMovie: Movie, files: FileArray) {
-    const fileName = fileServices.uploadFile(files);
+    const fileNamePicker = fileServices.uploadFilePicker(files);
+    const fileNameVideo = fileServices.uploadFileVideo(files);
     const movie = await prisma.movie.update({
       where: { id },
-      data: { ...dataMovie, img: fileName! },
+      data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
     });
     return movie;
   }

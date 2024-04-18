@@ -30,8 +30,9 @@ model Token {
 
 model Movie {
   id               Int                @id @default(autoincrement())
-  name             String             @unique
-  img              String
+  name             String
+  img              String?
+  video            String?
   duration         Int?
   year_of_creation DateTime?
   estimations      Int[]
