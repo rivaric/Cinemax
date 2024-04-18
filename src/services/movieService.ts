@@ -1,4 +1,6 @@
 import { Movie, PrismaClient } from "@prisma/client";
+import { fileServices } from "./fileServices";
+import { FileArray } from "express-fileupload";
 
 const prisma = new PrismaClient();
 
@@ -15,17 +17,19 @@ class MovieService {
     return movie;
   }
 
-  async createMovie(dataMovie: Movie) {
+  async createMovie(dataMovie: Movie, files: FileArray) {
+    const fileName = fileServices.uploadFile(files);
     const movie = await prisma.movie.create({
-      data: dataMovie,
+      data: { ...dataMovie, img: fileName! },
     });
     return movie;
   }
 
-  async updateMovie(id: number, dataMovie: Movie) {
+  async updateMovie(id: number, dataMovie: Movie, files: FileArray) {
+    const fileName = fileServices.uploadFile(files);
     const movie = await prisma.movie.update({
       where: { id },
-      data: dataMovie,
+      data: { ...dataMovie, img: fileName! },
     });
     return movie;
   }

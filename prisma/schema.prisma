@@ -32,8 +32,8 @@ model Movie {
   id               Int                @id @default(autoincrement())
   name             String             @unique
   img              String
-  duration         Int
-  year_of_creation DateTime
+  duration         Int?
+  year_of_creation DateTime?
   estimations      Int[]
   genre            String[]
   tags             String[]

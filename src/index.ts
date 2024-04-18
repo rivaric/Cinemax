@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { router } from "./router";
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
+import fileUpload from "express-fileupload";
 
 dotenv.config();
 
@@ -14,7 +15,9 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static("static"));
 app.use(cookieParser());
+app.use(fileUpload());
 app.use("/api", router);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

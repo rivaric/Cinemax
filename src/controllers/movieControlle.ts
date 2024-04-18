@@ -1,6 +1,7 @@
 import { Movie } from "@prisma/client";
 import { movieService } from "../services/movieService";
 import { Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
 class MovieController {
   async getMovies(req: Request, res: Response) {
@@ -16,14 +17,16 @@ class MovieController {
 
   async createMovie(req: Request<{}, {}, Movie>, res: Response) {
     const dataMovie = req.body;
-    const movie = await movieService.createMovie(dataMovie);
+    const files = req.files;
+    const movie = await movieService.createMovie(dataMovie, files!);
     res.json(movie);
   }
 
   async updateMovie(req: Request<{ id: string }, {}, Movie>, res: Response) {
     const { id } = req.params;
     const dataMovie = req.body;
-    const movie = await movieService.updateMovie(Number(id), dataMovie);
+    const files = req.files;
+    const movie = await movieService.updateMovie(Number(id), dataMovie, files!);
     res.json(movie);
   }
 
