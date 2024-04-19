@@ -1,12 +1,6 @@
 openapi: 3.0.0
 security:
   - bearerAuth: []
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
 info:
   title: Cinemax API
   description: API документация Cinemax приложения
@@ -126,9 +120,176 @@ paths:
           description: Пользователь успешно удален
   /api/movies:
     get:
-      summary: Получить список фильмов
+      summary: Получить список всех фильмов
+      operationId: getMovies
       tags:
         - Movies
-      security:
-        - bearerAuth: []
+
       responses:
+        "200":
+          description: Список фильмов успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+    post:
+      summary: Создать новый фильм
+      operationId: createMovie
+      tags:
+        - Movies
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+                  description: Изображение фильма
+                video:
+                  type: string
+                  format: binary
+                  description: Видеофайл фильма
+                otherData:
+                  $ref: "#/components/schemas/MovieWithoutFiles"
+      responses:
+        "200":
+          description: Фильм успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+  /api/movies/{id}:
+    get:
+      summary: Получить фильм по ID
+      operationId: getMovie
+      tags:
+        - Movies
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Данные фильма успешно получены
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+    patch:
+      summary: Обновить фильм
+      operationId: updateMovie
+      tags:
+        - Movies
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+                  description: Изображение фильма
+                video:
+                  type: string
+                  format: binary
+                  description: Видеофайл фильма
+                otherData:
+                  $ref: "#/components/schemas/MovieWithoutFiles"
+      responses:
+        "200":
+          description: Фильм успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+    delete:
+      summary: Удалить фильм
+      operationId: deleteMovie
+      tags:
+        - Movies
+      responses:
+        "200":
+          description: Фильм успешно удален
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    MovieWithoutFiles:
+      type: object
+      properties:
+        name:
+          type: string
+        duration:
+          type: integer
+          nullable: true
+        year_of_creation:
+          type: string
+          format: date-time
+          nullable: true
+        estimations:
+          type: array
+          items:
+            type: integer
+        genre:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        artors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActorOnMovie"
+        directors:
+          type: array
+          items:
+            $ref: "#/components/schemas/DirectorOnMovie"
+
+    Movie:
+      allOf:
+        - $ref: "#/components/schemas/MovieWithoutFiles"
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            img:
+              type: string
+              description: URL изображения
+            video:
+              type: string
+              description: URL видео
+
+    ActorOnMovie:
+      type: object
+      properties:
+        actorId:
+          type: integer
+          format: int64
+        movieId:
+          type: integer
+          format: int64
+
+    DirectorOnMovie:
+      type: object
+      properties:
+        directorId:
+          type: integer
+          format: int64
+        movieId:
+          type: integer
+          format: int64

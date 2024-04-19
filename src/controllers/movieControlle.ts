@@ -1,7 +1,6 @@
 import { Movie } from "@prisma/client";
 import { movieService } from "../services/movieService";
 import { Request, Response } from "express";
-import { UploadedFile } from "express-fileupload";
 
 class MovieController {
   async getMovies(req: Request, res: Response) {
