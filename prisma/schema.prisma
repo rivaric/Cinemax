@@ -29,47 +29,47 @@ model Token {
 }
 
 model Movie {
-  id               Int                @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   name             String
   img              String?
   video            String?
-  duration         Int?
+  duration         String?
   year_of_creation DateTime?
-  estimations      Int[]
-  genre            String[]
-  tags             String[]
-  artors           ActorsOnMovies[]
-  directors        DirectorOnMovies[]
+  estimations      String?
+  genre            String?
+  tags             String?
+  // artors           ActorsOnMovies[]
+  // directors        DirectorOnMovies[]
 }
 
-model Actor {
-  id     Int              @id @default(autoincrement())
-  name   String           @unique
-  img    String
-  movies ActorsOnMovies[]
-}
+// model Actor {
+//   id     Int              @id @default(autoincrement())
+//   name   String           @unique
+//   img    String
+//   movies ActorsOnMovies[]
+// }
 
-model Director {
-  id     Int                @id @default(autoincrement())
-  name   String
-  img    String
-  movies DirectorOnMovies[]
-}
+// model Director {
+//   id     Int                @id @default(autoincrement())
+//   name   String
+//   img    String
+//   movies DirectorOnMovies[]
+// }
 
-model ActorsOnMovies {
-  Movie   Movie @relation(fields: [movieId], references: [id])
-  movieId Int
-  Actor   Actor @relation(fields: [actorId], references: [id])
-  actorId Int
+// model ActorsOnMovies {
+//   Movie   Movie @relation(fields: [movieId], references: [id])
+//   movieId Int
+//   Actor   Actor @relation(fields: [actorId], references: [id])
+//   actorId Int
 
-  @@id([movieId, actorId])
-}
+//   @@id([movieId, actorId])
+// }
 
-model DirectorOnMovies {
-  Movie      Movie    @relation(fields: [movieId], references: [id])
-  movieId    Int
-  Director   Director @relation(fields: [directorId], references: [id])
-  directorId Int
+// model DirectorOnMovies {
+//   Movie      Movie    @relation(fields: [movieId], references: [id])
+//   movieId    Int
+//   Director   Director @relation(fields: [directorId], references: [id])
+//   directorId Int
 
-  @@id([movieId, directorId])
-}
+//   @@id([movieId, directorId])
+// }

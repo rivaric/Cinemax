@@ -128,12 +128,6 @@ paths:
       responses:
         "200":
           description: Список фильмов успешно получен
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Movie"
     post:
       summary: Создать новый фильм
       operationId: createMovie
@@ -154,15 +148,46 @@ paths:
                   type: string
                   format: binary
                   description: Видеофайл фильма
-                otherData:
-                  $ref: "#/components/schemas/MovieWithoutFiles"
+                name:
+                  type: string
+                duration:
+                  type: integer
+                  nullable: true
+                year_of_creation:
+                  type: string
+                  format: date-time
+                  nullable: true
+                estimations:
+                  type: array
+                  items:
+                    type: string
+                genre:
+                  type: array
+                  items:
+                    type: string
+                  style: form
+                  explode: true
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  style: form
+                  explode: true
+                # actors:
+                #   type: array
+                #   items:
+                #     $ref: "#/components/schemas/ActorOnMovie"
+                #   style: form
+                #   explode: true
+                # directors:
+                #   type: array
+                #   items:
+                #     $ref: "#/components/schemas/DirectorOnMovie"
+                #   style: form
+                #   explode: true
       responses:
         "200":
           description: Фильм успешно создан
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Movie"
   /api/movies/{id}:
     get:
       summary: Получить фильм по ID
@@ -178,15 +203,17 @@ paths:
       responses:
         "200":
           description: Данные фильма успешно получены
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Movie"
     patch:
       summary: Обновить фильм
       operationId: updateMovie
       tags:
         - Movies
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -202,15 +229,34 @@ paths:
                   type: string
                   format: binary
                   description: Видеофайл фильма
-                otherData:
-                  $ref: "#/components/schemas/MovieWithoutFiles"
+                name:
+                  type: string
+                duration:
+                  type: integer
+                  nullable: true
+                year_of_creation:
+                  type: string
+                  format: date-time
+                  nullable: true
+                estimations:
+                  type: array
+                  items:
+                    type: string
+                genre:
+                  type: array
+                  items:
+                    type: string
+                  style: form
+                  explode: true
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  style: form
+                  explode: true
       responses:
         "200":
           description: Фильм успешно обновлен
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Movie"
     delete:
       summary: Удалить фильм
       operationId: deleteMovie
@@ -250,14 +296,6 @@ components:
           type: array
           items:
             type: string
-        artors:
-          type: array
-          items:
-            $ref: "#/components/schemas/ActorOnMovie"
-        directors:
-          type: array
-          items:
-            $ref: "#/components/schemas/DirectorOnMovie"
 
     Movie:
       allOf:
@@ -274,22 +312,22 @@ components:
               type: string
               description: URL видео
 
-    ActorOnMovie:
-      type: object
-      properties:
-        actorId:
-          type: integer
-          format: int64
-        movieId:
-          type: integer
-          format: int64
+    # ActorOnMovie:
+    #   type: object
+    #   properties:
+    #     actorId:
+    #       type: integer
+    #       format: int64
+    #     movieId:
+    #       type: integer
+    #       format: int64
 
-    DirectorOnMovie:
-      type: object
-      properties:
-        directorId:
-          type: integer
-          format: int64
-        movieId:
-          type: integer
-          format: int64
+    # DirectorOnMovie:
+    #   type: object
+    #   properties:
+    #     directorId:
+    #       type: integer
+    #       format: int64
+    #     movieId:
+    #       type: integer
+    #       format: int64
