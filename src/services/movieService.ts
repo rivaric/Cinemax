@@ -1,23 +1,17 @@
-import { Movie, PrismaClient } from "@prisma/client";
+import { Movie, PrismaClient, UserMovieRating } from "@prisma/client";
 import { fileServices } from "./fileServices";
 import { FileArray } from "express-fileupload";
 import { roundUp } from "../utils/roundUp";
+import { json2csv } from "json-2-csv";
 
 const prisma = new PrismaClient();
 
 function getAverageRating(ratings: any): number {
-  const { totalSum, totalCount } = ratings.reduce(
-    (acc: any, rating: any) => {
-      const sum = rating.rating.reduce((acc: any, curr: any) => acc + curr, 0);
-      return {
-        totalSum: acc.totalSum + sum,
-        totalCount: acc.totalCount + rating.rating.length,
-      };
-    },
-    { totalSum: 0, totalCount: 0 }
-  );
-
-  const averageRating = totalCount > 0 ? totalSum / totalCount : 0;
+  const averageRating =
+    ratings.reduce(
+      (acc: number, { rating }: UserMovieRating) => acc + rating,
+      0
+    ) / ratings.length;
 
   const roundedAverageRating = roundUp(averageRating, 1);
 
@@ -25,6 +19,18 @@ function getAverageRating(ratings: any): number {
 }
 
 class MovieService {
+  async generateCSVMovies() {
+    const movies = await prisma.movie.findMany();
+    const moviesCSV = json2csv(movies);
+    fileServices.uploadFileCSV(moviesCSV, "movies");
+  }
+
+  async generateRaringsCVS() {
+    const ratings = await prisma.userMovieRating.findMany();
+    const ratingsCSV = json2csv(ratings);
+    fileServices.uploadFileCSV(ratingsCSV, "ratings");
+  }
+
   async getMovies() {
     const movies = await prisma.movie.findMany();
     return movies;
@@ -43,6 +49,9 @@ class MovieService {
     const movie = await prisma.movie.create({
       data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
     });
+
+    await this.generateCSVMovies();
+
     return movie;
   }
 
@@ -53,6 +62,9 @@ class MovieService {
       where: { id },
       data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
     });
+
+    await this.generateCSVMovies();
+
     return movie;
   }
 
@@ -60,6 +72,9 @@ class MovieService {
     const movie = await prisma.movie.delete({
       where: { id },
     });
+
+    await this.generateCSVMovies();
+
     return movie;
   }
 
@@ -84,14 +99,12 @@ class MovieService {
         },
       },
       update: {
-        rating: {
-          push: rating,
-        },
+        rating,
       },
       create: {
         userId: userId,
         movieId: movieId,
-        rating: [rating],
+        rating: rating,
       },
     });
 
@@ -103,8 +116,12 @@ class MovieService {
 
     const averageRating = getAverageRating(ratings);
 
+    await this.generateRaringsCVS();
+
     return averageRating;
   }
+
+  async getSimilar(id: number) {}
 }
 
 export const movieService = new MovieService();

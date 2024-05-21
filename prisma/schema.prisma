@@ -39,7 +39,7 @@ model UserMovieRating {
   id      Int @id @default(autoincrement())
   userId  Int
   movieId Int
-  rating  Int[]
+  rating  Int
 
   user  User  @relation(fields: [userId], references: [id])
   movie Movie @relation(fields: [movieId], references: [id])

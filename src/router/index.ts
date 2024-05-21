@@ -39,3 +39,4 @@ router.post(
   authMiddleware,
   movieController.addRating
 );
+router.get("/movies/similar/:id", authMiddleware, movieController.getSimilar);
