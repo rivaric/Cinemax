@@ -87,6 +87,23 @@ class UserService {
       user: userDto,
     };
   }
+
+  async getRated(id: number) {
+    const movieIds = await prisma.userMovieRating.findMany({
+      where: { userId: id },
+      select: {
+        movieId: true,
+      },
+    });
+
+    const promises = movieIds.map(({ movieId: id }) =>
+      prisma.movie.findUnique({ where: { id } })
+    );
+
+    const movies = await Promise.all(promises);
+
+    return movies;
+  }
 }
 
 export const userService = new UserService();
