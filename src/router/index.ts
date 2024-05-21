@@ -22,7 +22,7 @@ router.post(
 router.post("/logout", userController.logout);
 router.get("/refresh", userController.refresh);
 
-// test
+// user
 router.get("/users", authMiddleware, userController.getAllUsers);
 router.delete("/user", authMiddleware, userController.deleteUser);
 
@@ -32,13 +32,10 @@ router.get("/movies/:id", authMiddleware, movieController.getMovie);
 router.post("/movies", authMiddleware, movieController.createMovie);
 router.patch("/movies/:id", authMiddleware, movieController.updateMovie);
 router.delete("/movies/:id", authMiddleware, movieController.deleteMovie);
-
-// Actor
-// router.get("/actors", authMiddleware, actorController.getActors);
-// router.get("/actors/:id", authMiddleware, actorController.getActor);
-// router.post("/actors", authMiddleware, actorController.createActor);
-
-// Director
-// router.get("/director", authMiddleware, directorController.getDirector);
-// router.get("/director/:id", authMiddleware, directorController.getDirector);
-// router.post("/director", authMiddleware, directorController.createDirector);
+router.get("/movies/rating/:id", authMiddleware, movieController.getRating);
+router.post(
+  "/movies/rating",
+  body("rating").isFloat({ min: 1, max: 5 }),
+  authMiddleware,
+  movieController.addRating
+);

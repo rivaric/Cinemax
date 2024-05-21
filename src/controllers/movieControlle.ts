@@ -34,6 +34,22 @@ class MovieController {
     const movie = await movieService.deleteMovie(Number(id));
     res.json(movie);
   }
+
+  async getRating(req: Request, res: Response) {
+    const { id } = req.params;
+    const averageRating = await movieService.getRating(Number(id));
+    res.json({ rating: averageRating });
+  }
+
+  async addRating(req: Request, res: Response) {
+    const { rating, movieId, userId } = req.body;
+    const averageRating = await movieService.addRating(
+      Number(movieId),
+      Number(userId),
+      rating
+    );
+    res.json({ rating: averageRating });
+  }
 }
 
 export const movieController = new MovieController();

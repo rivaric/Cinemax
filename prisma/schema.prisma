@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  token    Token?
-  img      String @default("")
+  id          Int               @id @default(autoincrement())
+  email       String            @unique
+  password    String
+  token       Token?
+  img         String            @default("")
+  rated_films UserMovieRating[]
 }
 
 model Token {
@@ -29,47 +24,25 @@ model Token {
 }
 
 model Movie {
-  id               Int       @id @default(autoincrement())
+  id               Int               @id @default(autoincrement())
   name             String
-  img              String?
-  video            String?
-  duration         String?
-  year_of_creation DateTime?
-  estimations      String?
-  genre            String?
-  tags             String?
-  // artors           ActorsOnMovies[]
-  // directors        DirectorOnMovies[]
+  img              String
+  video            String
+  duration         String
+  year_of_creation DateTime
+  ratings          UserMovieRating[]
+  genre            String
+  tags             String
 }
 
-// model Actor {
-//   id     Int              @id @default(autoincrement())
-//   name   String           @unique
-//   img    String
-//   movies ActorsOnMovies[]
-// }
+model UserMovieRating {
+  id      Int @id @default(autoincrement())
+  userId  Int
+  movieId Int
+  rating  Int[]
 
-// model Director {
-//   id     Int                @id @default(autoincrement())
-//   name   String
-//   img    String
-//   movies DirectorOnMovies[]
-// }
+  user  User  @relation(fields: [userId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
 
-// model ActorsOnMovies {
-//   Movie   Movie @relation(fields: [movieId], references: [id])
-//   movieId Int
-//   Actor   Actor @relation(fields: [actorId], references: [id])
-//   actorId Int
-
-//   @@id([movieId, actorId])
-// }
-
-// model DirectorOnMovies {
-//   Movie      Movie    @relation(fields: [movieId], references: [id])
-//   movieId    Int
-//   Director   Director @relation(fields: [directorId], references: [id])
-//   directorId Int
-
-//   @@id([movieId, directorId])
-// }
+  @@unique([userId, movieId])
+}
