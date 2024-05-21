@@ -29,6 +29,7 @@ router.get("/user/:id/rated", authMiddleware, userController.getRated);
 
 // Movie
 router.get("/movies", authMiddleware, movieController.getMovies);
+router.get("/movies/new", authMiddleware, movieController.getNewMovies);
 router.get("/movies/:id", authMiddleware, movieController.getMovie);
 router.post("/movies", authMiddleware, movieController.createMovie);
 router.patch("/movies/:id", authMiddleware, movieController.updateMovie);
@@ -40,4 +41,3 @@ router.post(
   authMiddleware,
   movieController.addRating
 );
-router.get("/movies/similar/:id", authMiddleware, movieController.getSimilar);

@@ -51,10 +51,9 @@ class MovieController {
     res.json({ rating: averageRating });
   }
 
-  async getSimilar(req: Request, res: Response) {
-    const { id } = req.params;
-    const similarMovies = await movieService.getSimilar(Number(id));
-    res.json(similarMovies);
+  async getNewMovies(req: Request, res: Response) {
+    const movies = await movieService.getNewMovies();
+    res.json(movies);
   }
 }
 

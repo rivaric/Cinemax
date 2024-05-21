@@ -121,7 +121,21 @@ class MovieService {
     return averageRating;
   }
 
-  async getSimilar(id: number) {}
+  async getNewMovies() {
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    const movies = await prisma.movie.findMany({
+      where: {
+        year_of_creation: {
+          gte: oneMonthAgo,
+        },
+      },
+      take: 3,
+    });
+
+    return movies;
+  }
 }
 
 export const movieService = new MovieService();
