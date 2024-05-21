@@ -31,7 +31,7 @@ class FileService {
   uploadFileCSV(csv: string, name: string) {
     try {
       const fileName = name + ".csv";
-      const filePath = path.resolve("csv", fileName);
+      const filePath = path.resolve("static", fileName);
       fs.writeFileSync(filePath, csv);
     } catch (e) {
       console.log(e);
