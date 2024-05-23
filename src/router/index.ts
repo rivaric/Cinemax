@@ -24,7 +24,7 @@ router.get("/refresh", userController.refresh);
 
 // user
 router.get("/users", authMiddleware, userController.getAllUsers);
-router.delete("/user", authMiddleware, userController.deleteUser);
+router.delete("/user/:id", authMiddleware, userController.deleteUser);
 router.get("/user/:id/rated", authMiddleware, userController.getRated);
 
 // Movie

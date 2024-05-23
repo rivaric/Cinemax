@@ -1,0 +1,430 @@
+{
+  "openapi": "3.0.0",
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "info": {
+    "title": "Cinemax API",
+    "description": "API документация Cinemax приложения"
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "API для авторизации и аутентификации пользователей"
+    },
+    {
+      "name": "Users",
+      "description": "API для работы с пользователями"
+    },
+    {
+      "name": "Movies",
+      "description": "API для работы с фильмами"
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "summary": "Авторизация пользователя",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная авторизация"
+          }
+        }
+      }
+    },
+    "/api/registration": {
+      "post": {
+        "summary": "Регистрация пользователя",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная регистрация"
+          }
+        }
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "summary": "Выход пользователя",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Успешный выход"
+          }
+        }
+      }
+    },
+    "/api/refresh": {
+      "get": {
+        "summary": "Обновление токена",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Токен успешно обновлен"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "summary": "Получить список пользователей",
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список пользователей",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": [
+                    {
+                      "id": 1,
+                      "email": "email@email.com",
+                      "password": "example"
+                    },
+                    {
+                      "id": 2,
+                      "email": "email@email.ru",
+                      "password": "example"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{id}": {
+      "delete": {
+        "summary": "Удалить пользователя",
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пользователь успешно удален"
+          }
+        }
+      }
+    },
+    "/api/user/{id}/rated": {
+      "get": {
+        "summary": "Оценённые фильмы пользователя",
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список оценнённых фильмов"
+          }
+        }
+      }
+    },
+    "/api/movies/new": {
+      "get": {
+        "summary": "Новинки фильмов",
+        "tags": ["Movies"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список новинок"
+          }
+        }
+      }
+    },
+    "/api/movies": {
+      "get": {
+        "summary": "Получить список всех фильмов",
+        "operationId": "getMovies",
+        "tags": ["Movies"],
+        "responses": {
+          "200": {
+            "description": "Список фильмов успешно получен"
+          }
+        }
+      },
+      "post": {
+        "summary": "Создать новый фильм",
+        "operationId": "createMovie",
+        "tags": ["Movies"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Фильм успешно создан"
+          }
+        }
+      }
+    },
+    "/api/movies/{id}": {
+      "get": {
+        "summary": "Получить фильм по ID",
+        "operationId": "getMovie",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Данные фильма успешно получены"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Обновить фильм",
+        "operationId": "updateMovie",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Фильм успешно обновлен"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Удалить фильм",
+        "operationId": "deleteMovie",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Фильм успешно удален"
+          }
+        }
+      }
+    },
+    "/api/movies/rating/{id}": {
+      "get": {
+        "summary": "Получить рейтиг фильма",
+        "tags": ["Movies"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пользователь успешно удален"
+          }
+        }
+      }
+    },
+    "/api/movies/rating": {
+      "post": {
+        "summary": "Оценить фильм",
+        "tags": ["Movies"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movieId": {
+                    "type": "integer"
+                  },
+                  "userId": {
+                    "type": "integer"
+                  },
+                  "rating": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Пользователь успешно удален"
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "main_img": {
+            "type": "string",
+            "format": "binary",
+            "description": "Файл изображения"
+          },
+          "horizontal_img": {
+            "type": "string",
+            "format": "binary",
+            "description": "Файл изображения"
+          },
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Файл видео"
+          },
+          "name": {
+            "type": "string"
+          },
+          "descr": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer",
+            "nullable": true
+          },
+          "year_of_creation": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "genre": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

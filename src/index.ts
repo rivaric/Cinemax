@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { router } from "./router";
-import YAML from "yamljs";
+import fs from "fs";
 import swaggerUi from "swagger-ui-express";
 import fileUpload from "express-fileupload";
 
@@ -11,7 +11,9 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
-const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = JSON.parse(
+  fs.readFileSync("./swagger.json").toString()
+);
 
 app.use(cors());
 app.use(express.json());

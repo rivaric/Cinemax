@@ -38,8 +38,8 @@ class UserController {
     res.json(users);
   }
   async deleteUser(req: Request, res: Response) {
-    const { id } = req.body;
-    const user = await userService.deleteUser(id);
+    const { id } = req.params;
+    const user = await userService.deleteUser(Number(id));
     res.json(user);
   }
   async logout(req: Request, res: Response) {
