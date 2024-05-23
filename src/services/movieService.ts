@@ -44,10 +44,25 @@ class MovieService {
   }
 
   async createMovie(dataMovie: Movie, files: FileArray) {
-    const fileNamePicker = fileServices.uploadFilePicker(files);
-    const fileNameVideo = fileServices.uploadFileVideo(files);
+    const mainImgFile = Array.isArray(files.main_img)
+      ? files.main_img[0]
+      : files.main_img;
+    const horizontalImgFile = Array.isArray(files.horizontal_img)
+      ? files.horizontal_img[0]
+      : files.horizontal_img;
+    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
+
+    const fileNamePickerMain = fileServices.uploadFilePicker(mainImgFile);
+    const fileNamePickerHorizontal =
+      fileServices.uploadFilePicker(horizontalImgFile);
+    const fileNameVideo = fileServices.uploadFileVideo(videoFile);
     const movie = await prisma.movie.create({
-      data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
+      data: {
+        ...dataMovie,
+        main_img: fileNamePickerMain!,
+        horizontal_img: fileNamePickerHorizontal!,
+        video: fileNameVideo!,
+      },
     });
 
     await this.generateCSVMovies();
@@ -56,11 +71,27 @@ class MovieService {
   }
 
   async updateMovie(id: number, dataMovie: Movie, files: FileArray) {
-    const fileNamePicker = fileServices.uploadFilePicker(files);
-    const fileNameVideo = fileServices.uploadFileVideo(files);
+    const mainImgFile = Array.isArray(files.main_img)
+      ? files.main_img[0]
+      : files.main_img;
+    const horizontalImgFile = Array.isArray(files.horizontal_img)
+      ? files.horizontal_img[0]
+      : files.horizontal_img;
+    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
+
+    const fileNamePickerMain = fileServices.uploadFilePicker(mainImgFile);
+    const fileNamePickerHorizontal =
+      fileServices.uploadFilePicker(horizontalImgFile);
+    const fileNameVideo = fileServices.uploadFileVideo(videoFile);
+
     const movie = await prisma.movie.update({
       where: { id },
-      data: { ...dataMovie, img: fileNamePicker!, video: fileNameVideo! },
+      data: {
+        ...dataMovie,
+        main_img: fileNamePickerMain!,
+        horizontal_img: fileNamePickerHorizontal!,
+        video: fileNameVideo!,
+      },
     });
 
     await this.generateCSVMovies();

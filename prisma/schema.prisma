@@ -26,8 +26,10 @@ model Token {
 model Movie {
   id               Int               @id @default(autoincrement())
   name             String
-  img              String
+  main_img         String
+  horizontal_img   String
   video            String
+  descr            String
   duration         String
   year_of_creation DateTime
   ratings          UserMovieRating[]
