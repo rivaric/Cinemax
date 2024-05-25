@@ -138,6 +138,32 @@
         }
       }
     },
+    "/api/user/{id}/recommendations": {
+      "get": {
+        "summary": "Список рекоминдаций для пользователя",
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список рекомендаций"
+          }
+        }
+      }
+    },
     "/api/user/{id}": {
       "delete": {
         "summary": "Удалить пользователя",
@@ -202,6 +228,32 @@
         "responses": {
           "200": {
             "description": "Список новинок"
+          }
+        }
+      }
+    },
+    "/api/movies/{id}/similar": {
+      "get": {
+        "summary": "Похожие фильмы",
+        "tags": ["Movies"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список похожих фильмов"
           }
         }
       }

@@ -26,6 +26,11 @@ router.get("/refresh", userController.refresh);
 router.get("/users", authMiddleware, userController.getAllUsers);
 router.delete("/user/:id", authMiddleware, userController.deleteUser);
 router.get("/user/:id/rated", authMiddleware, userController.getRated);
+router.get(
+  "/user/:id/recommendations",
+  authMiddleware,
+  userController.getRecommendations
+);
 
 // Movie
 router.get("/movies", authMiddleware, movieController.getMovies);
@@ -41,3 +46,4 @@ router.post(
   authMiddleware,
   movieController.addRating
 );
+router.get("/movies/:id/similar", authMiddleware, movieController.getSimilar);

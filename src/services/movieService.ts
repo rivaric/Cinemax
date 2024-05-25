@@ -1,8 +1,9 @@
 import { Movie, PrismaClient, UserMovieRating } from "@prisma/client";
-import { fileServices } from "./fileServices";
+import { fileServices } from "./fileService";
 import { FileArray } from "express-fileupload";
 import { roundUp } from "../utils/roundUp";
 import { json2csv } from "json-2-csv";
+import { mlService } from "./mlService";
 
 const prisma = new PrismaClient();
 
@@ -19,18 +20,6 @@ function getAverageRating(ratings: any): number {
 }
 
 class MovieService {
-  async generateCSVMovies() {
-    const movies = await prisma.movie.findMany();
-    const moviesCSV = json2csv(movies);
-    fileServices.uploadFileCSV(moviesCSV, "movies");
-  }
-
-  async generateRaringsCVS() {
-    const ratings = await prisma.userMovieRating.findMany();
-    const ratingsCSV = json2csv(ratings);
-    fileServices.uploadFileCSV(ratingsCSV, "ratings");
-  }
-
   async getMovies() {
     const movies = await prisma.movie.findMany();
     return movies;
@@ -65,8 +54,6 @@ class MovieService {
       },
     });
 
-    await this.generateCSVMovies();
-
     return movie;
   }
 
@@ -94,8 +81,6 @@ class MovieService {
       },
     });
 
-    await this.generateCSVMovies();
-
     return movie;
   }
 
@@ -103,8 +88,6 @@ class MovieService {
     const movie = await prisma.movie.delete({
       where: { id },
     });
-
-    await this.generateCSVMovies();
 
     return movie;
   }
@@ -147,8 +130,6 @@ class MovieService {
 
     const averageRating = getAverageRating(ratings);
 
-    await this.generateRaringsCVS();
-
     return averageRating;
   }
 
@@ -164,6 +145,34 @@ class MovieService {
       },
       take: 3,
     });
+
+    return movies;
+  }
+
+  async getSimilar(id: number) {
+    await mlService.generateCSVMovies();
+    await mlService.generateMatrix();
+
+    const response = await fetch(
+      `${process.env.URL_RECOMMENDATION}/similar_ids`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          id,
+        }),
+      }
+    );
+
+    const data: number[] = await response.json();
+
+    const promises = data.map((id) =>
+      prisma.movie.findUnique({ where: { id } })
+    );
+
+    const movies = await Promise.all(promises);
 
     return movies;
   }

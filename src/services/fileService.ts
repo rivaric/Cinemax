@@ -1,4 +1,4 @@
-import { FileArray, UploadedFile } from "express-fileupload";
+import { UploadedFile } from "express-fileupload";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
@@ -26,10 +26,10 @@ class FileService {
     }
   }
 
-  uploadFileCSV(csv: string, name: string) {
+  uploadFileCSV(csv: string, name: string, externalPath: string) {
     try {
       const fileName = name + ".csv";
-      const filePath = path.resolve("static", fileName);
+      const filePath = path.resolve(externalPath, fileName);
       fs.writeFileSync(filePath, csv);
     } catch (e) {
       console.log(e);

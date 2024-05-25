@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 import { tokenService } from "./tokenService";
 import { UserDto } from "../dtos/userDto";
+import { mlService } from "./mlService";
 
 const prisma = new PrismaClient();
 
@@ -98,6 +99,37 @@ class UserService {
 
     const promises = movieIds.map(({ movieId: id }) =>
       prisma.movie.findUnique({ where: { id } })
+    );
+
+    const movies = await Promise.all(promises);
+
+    return movies;
+  }
+
+  async getRecommendations(id: number) {
+    await mlService.generateRaringsCVS();
+    await mlService.generateMatrix();
+
+    const response = await fetch(
+      `${process.env.URL_RECOMMENDATION}/recommend`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          id,
+        }),
+      }
+    );
+    const data: number[] = await response.json();
+
+    const promises = data.map((id) =>
+      prisma.movie.findUnique({
+        where: {
+          id,
+        },
+      })
     );
 
     const movies = await Promise.all(promises);

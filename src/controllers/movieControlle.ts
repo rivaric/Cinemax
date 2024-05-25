@@ -55,6 +55,12 @@ class MovieController {
     const movies = await movieService.getNewMovies();
     res.json(movies);
   }
+
+  async getSimilar(req: Request, res: Response) {
+    const { id } = req.params;
+    const movies = await movieService.getSimilar(Number(id));
+    res.json(movies);
+  }
 }
 
 export const movieController = new MovieController();

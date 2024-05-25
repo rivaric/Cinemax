@@ -75,6 +75,16 @@ class UserController {
       return res.status(400).json({ error: err.message });
     }
   }
+
+  async getRecommendations(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const movies = await userService.getRecommendations(Number(id));
+      res.json(movies);
+    } catch (err: any) {
+      return res.status(400).json({ error: err.message });
+    }
+  }
 }
 
 export const userController = new UserController();
